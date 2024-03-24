@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Transaction</title>
+    <link rel="stylesheet" type="text/css" href="/Style.css">
+</head>
+<body>
+
+<div class="form-container">
+    <form id="editTransactionForm" class="column-form">
+
+        <label for="name">Transaction Name:</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="amount">Amount:</label>
+        <input type="number" step="0.01" id="amount" name="amount" required>
+
+        <label for="category">Category:</label>
+        <select id="category" name="category">
+            <option value="INCOME">Income</option>
+            <option value="EXPENSES">Expenses</option>
+        </select>
+
+        <label for="description">Description:</label>
+        <textarea id="description" name="description"></textarea>
+
+        <label for="dateTime">Date and Time:</label>
+        <input type="datetime-local" id="dateTime" name="dateTime" required>
+
+        <button type="submit">Update</button>
+        <button id="deleteButton" class="delete-button" type="button">Delete Transaction</button>
+    </form>
+    <button onclick="location.href='/transactions'">Cancel</button>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const editForm = document.getElementById('editTransactionForm');
+        const deleteButton = document.getElementById('deleteButton');
+
+
+        const transactionId = window.location.pathname.split("/").pop();
+
+
+        editForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+            const formData = {
+                name: document.getElementById('name').value,
+                amount: parseFloat(document.getElementById('amount').value),
+                category: document.getElementById('category').value,
+                description: document.getElementById('description').value,
+                dateTime: document.getElementById('dateTime').value
+            };
+
+            fetch('/api/transactions/' + transactionId, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Success:', data);
+                    alert('Transaction updated successfully!');
+                    window.location.href = '/transactions';
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while updating the transaction.');
+                });
+        });
+
+        deleteButton.addEventListener('click', function () {
+            if (confirm('Are you sure you want to delete this transaction?')) {
+                fetch('/api/transactions/' + transactionId, {
+                    method: 'DELETE',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.text();
+                    })
+                    .then(() => {
+                        alert('Transaction deleted successfully!');
+                        window.location.href = '/transactions';
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('An error occurred while deleting the transaction.');
+                    });
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

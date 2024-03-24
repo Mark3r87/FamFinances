@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Monthly Balance</title>
+    <link rel="stylesheet" type="text/css" href="/Style.css">
+</head>
+<body>
+<h1>Monthly Balance</h1>
+
+<script>
+    window.onload = function () {
+        const urlParts = window.location.pathname.split('/');
+        const month = urlParts[2];
+        const year = urlParts[3];
+
+        fetch(`/api/transactions/balance/${month}/${year}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok: ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(balance => {
+
+                document.getElementById('balance').textContent = `€${balance.toFixed(2)}`;
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+            });
+    };
+</script>
+
+<p id="balance"></p>
+<button onclick="location.href='/';">Return to Index</button>
+</body>
+</html>

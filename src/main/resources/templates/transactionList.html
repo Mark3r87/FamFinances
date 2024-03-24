@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" type="text/css" href="/Style.css">
+    <meta charset="UTF-8">
+    <title>Transaction List</title>
+    <script>
+        window.onload = function () {
+            fetch('/api/transactions')
+                .then(response => response.json())
+                .then(data => {
+                    const table = document.getElementById('transactionTable');
+                    data.forEach(transaction => {
+                        const row = table.insertRow();
+
+                        if (transaction.category.toLowerCase() === 'income') {
+                            row.style.backgroundColor = 'lightgreen';
+                        } else if (transaction.category.toLowerCase() === 'expenses') {
+                            row.style.backgroundColor = 'lightcoral';
+                        }
+
+                        row.insertCell().textContent = transaction.id;
+                        row.insertCell().textContent = transaction.name;
+                        row.insertCell().textContent = transaction.amount;
+                        row.insertCell().textContent = transaction.dateTime;
+
+                        const optionsCell = row.insertCell();
+
+                        const detailsButton = document.createElement('button');
+                        detailsButton.textContent = 'Details';
+                        detailsButton.onclick = function () {
+                            location.href = '/transactions/' + transaction.id;
+                        };
+                        optionsCell.appendChild(detailsButton);
+
+                        const editButton = document.createElement('button');
+                        editButton.textContent = 'Edit entry';
+                        editButton.onclick = function () {
+                            location.href = '/transactions/edit/' + transaction.id;
+                        };
+                        optionsCell.appendChild(editButton);
+                    });
+                });
+        };
+    </script>
+</head>
+<body>
+<h1>Transaction List</h1>
+<table id="transactionTable">
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Amount</th>
+        <th>Date-Time</th>
+        <th>Options</th>
+    </tr>
+</table>
+<button onclick="location.href='index';">Return to Index</button>
+</body>
+</html>

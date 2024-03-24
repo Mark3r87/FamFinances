@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <link rel="stylesheet" type="text/css" href="/Style.css">
+</head>
+<body>
+<div class="header">
+    <h1>Welcome to FamFinances</h1>
+</div>
+
+<div class="main-section">
+    <div class="body-content">
+        <div class="form-container">
+            <a href="/dataEntryForm" class="button">Data Entry</a>
+            <a href="/transactions" class="button">Transactions List</a>
+            <a href="/expenses" class="button">Expenses List</a>
+            <a href="/income" class="button">Income List</a>
+            <a href="/balance/all-time" class="button">All Time Balance</a>
+        </div>
+
+        <div class="form-container">
+            <h2>Expenses by Month</h2>
+            <form id="expensesForm" class="column-form">
+                <label for="expensesMonth"></label><select id="expensesMonth" name="expensesMonth">
+                <option value="1">January</option>
+                <option value="2">February</option>
+                <option value="3">March</option>
+                <option value="4">April</option>
+                <option value="5">May</option>
+                <option value="6">June</option>
+                <option value="7">July</option>
+                <option value="8">August</option>
+                <option value="9">September</option>
+                <option value="10">October</option>
+                <option value="11">November</option>
+                <option value="12">December</option>
+            </select>
+                <label for="expensesYear"></label><select id="expensesYear" name="expensesYear"
+                                                          class="year-select"></select>
+                <button type="button" onclick="goToExpenses()">Go</button>
+            </form>
+        </div>
+
+        <div class="form-container">
+            <h2>Income by Month</h2>
+            <form id="incomeForm" class="column-form">
+                <label for="incomeMonth"></label><select id="incomeMonth" name="incomeMonth">
+                <option value="1">January</option>
+                <option value="2">February</option>
+                <option value="3">March</option>
+                <option value="4">April</option>
+                <option value="5">May</option>
+                <option value="6">June</option>
+                <option value="7">July</option>
+                <option value="8">August</option>
+                <option value="9">September</option>
+                <option value="10">October</option>
+                <option value="11">November</option>
+                <option value="12">December</option>
+            </select>
+                <label for="incomeYear"></label><select id="incomeYear" name="incomeYear" class="year-select"></select>
+                <button type="button" onclick="goToIncome()">Go</button>
+            </form>
+        </div>
+
+        <div class="form-container">
+            <h2>Monthly Balance</h2>
+            <form id="balanceForm" class="column-form">
+                <label for="balanceMonth"></label><select id="balanceMonth" name="balanceMonth">
+                <option value="1">January</option>
+                <option value="2">February</option>
+                <option value="3">March</option>
+                <option value="4">April</option>
+                <option value="5">May</option>
+                <option value="6">June</option>
+                <option value="7">July</option>
+                <option value="8">August</option>
+                <option value="9">September</option>
+                <option value="10">October</option>
+                <option value="11">November</option>
+                <option value="12">December</option>
+            </select>
+                <label for="balanceYear"></label><select id="balanceYear" name="balanceYear"
+                                                         class="year-select"></select>
+                <button type="button" onclick="goToBalance()">Go</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="bg-image"></div>
+<script>
+    function goToExpenses() {
+        const month = document.getElementById('expensesMonth').value;
+        const year = document.getElementById('expensesYear').value;
+        window.location.href = `/expenses/${month}/${year}`;
+    }
+
+    function goToIncome() {
+        const month = document.getElementById('incomeMonth').value;
+        const year = document.getElementById('incomeYear').value;
+        window.location.href = `/income/${month}/${year}`;
+    }
+
+    function goToBalance() {
+        const month = document.getElementById('balanceMonth').value;
+        const year = document.getElementById('balanceYear').value;
+        window.location.href = `/balance/${month}/${year}`;
+    }
+
+    function generateYearOptions() {
+        const currentYear = new Date().getFullYear();
+        const yearSelectElements = document.querySelectorAll('.year-select');
+        yearSelectElements.forEach(selectElement => {
+            for (let year = currentYear - 10; year <= currentYear + 10; year++) {
+                const option = document.createElement('option');
+                option.value = option.textContent = year;
+                option.selected = year === currentYear;
+                selectElement.appendChild(option);
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        generateYearOptions();
+    });
+</script>
+</body>
+</html>

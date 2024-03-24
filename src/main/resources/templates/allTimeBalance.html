@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>All Time Balance</title>
+    <link rel="stylesheet" type="text/css" href="/Style.css">
+</head>
+<body>
+<h1>All Time Balance</h1>
+
+<p id="balance"></p>
+<a href="/index">Back to Index</a>
+
+<script>
+    window.onload = function () {
+        fetch('/api/transactions/balance/all-time')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('balance').textContent = 'Balance: €' + data.toFixed(2);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    };
+</script>
+
+</body>
+</html>

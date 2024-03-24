@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Data Entry</title>
+    <link rel="stylesheet" type="text/css" href="/Style.css">
+</head>
+<body>
+
+<div class="form-container">
+    <form id="dataEntryForm" action="/api/transactions" method="post" class="column-form">
+        <label for="name">Transaction Name:</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="amount">Amount:</label>
+        <input type="number" step="0.01" id="amount" name="amount" required>
+
+        <label for="category">Category:</label>
+        <select id="category" name="category">
+            <option value="INCOME">Income</option>
+            <option value="EXPENSES">Expenses</option>
+        </select>
+
+        <label for="description">Description:</label>
+        <textarea id="description" name="description"></textarea>
+
+        <label for="dateTime">Date and Time:</label>
+        <input type="datetime-local" id="dateTime" name="dateTime" required>
+
+        <button type="submit">Submit</button>
+
+    </form>
+    <button onclick="location.href='index';">Return to Index</button>
+</div>
+<script>
+    document.getElementById('dataEntryForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        const formData = {
+            name: this.name.value,
+            amount: parseFloat(this.amount.value),
+            category: this.category.value,
+            description: this.description.value,
+            dateTime: this.dateTime.value
+        };
+
+        fetch(this.action, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok.');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Success:', data);
+                alert('Data submitted successfully!');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    });
+
+</script>
+
+
+</body>
+</html>

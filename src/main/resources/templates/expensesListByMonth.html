@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Expenses List by Month</title>
+    <link rel="stylesheet" type="text/css" href="/Style.css">
+</head>
+<body>
+<h1>Expenses List by Month</h1>
+
+<script>
+    window.onload = function () {
+        const urlParts = window.location.pathname.split('/');
+        const month = urlParts[2];
+        const year = urlParts[3];
+
+        fetch(`/api/transactions/expenses/${month}/${year}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                const table = document.getElementById('transactionTable');
+                console.log(data);
+                data.forEach(transaction => {
+                    const row = table.insertRow();
+                    row.insertCell().textContent = transaction.id;
+                    row.insertCell().textContent = transaction.description;
+                    row.insertCell().textContent = `€${transaction.amount.toFixed(2)}`;
+                    row.insertCell().textContent = new Date(transaction.dateTime).toLocaleString();
+                });
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+            });
+    };
+</script>
+
+<table id="transactionTable">
+    <tr>
+        <th>Transaction ID</th>
+        <th>Description</th>
+        <th>Amount</th>
+        <th>Date</th>
+    </tr>
+
+</table>
+
+<button onclick="location.href='/';">Return to Index</button>
+</body>
+</html>
