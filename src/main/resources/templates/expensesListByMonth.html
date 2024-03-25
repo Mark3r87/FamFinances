@@ -28,14 +28,23 @@
                         })
                         .then(data => {
                             const table = document.getElementById('transactionTable');
-                            console.log(data);
+                            let sum = 0;
                             data.forEach(transaction => {
                                 const row = table.insertRow();
+                                const amount = parseFloat(transaction.amount.toFixed(2));
                                 row.insertCell().textContent = transaction.id;
                                 row.insertCell().textContent = transaction.description;
-                                row.insertCell().textContent = `€${transaction.amount.toFixed(2)}`;
+                                row.insertCell().textContent = `€${amount}`;
+                                sum += amount;
                                 row.insertCell().textContent = new Date(transaction.dateTime).toLocaleString();
                             });
+
+                            // Add a row for the sum at the bottom
+                            const sumRow = table.insertRow();
+                            sumRow.insertCell().textContent = 'Total';
+                            sumRow.insertCell().textContent = '';
+                            sumRow.insertCell().textContent = '€' + sum.toFixed(2);
+                            sumRow.insertCell().textContent = '';
                         })
                         .catch(error => {
                             console.error('Fetch error:', error);

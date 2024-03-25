@@ -28,11 +28,14 @@
                         .then(response => response.json())
                         .then(data => {
                             const table = document.getElementById('transactionTable');
+                            let sum = 0;
                             data.forEach(transaction => {
                                 const row = table.insertRow();
                                 row.insertCell().textContent = transaction.id;
                                 row.insertCell().textContent = transaction.description;
-                                row.insertCell().textContent = '€' + transaction.amount.toFixed(2);
+                                const amount = parseFloat(transaction.amount.toFixed(2));
+                                row.insertCell().textContent = '€' + amount;
+                                sum += amount;
                                 row.insertCell().textContent = transaction.dateTime;
 
                                 const detailsCell = row.insertCell();
@@ -52,6 +55,14 @@
 
                                 row.className = transaction.category === 'INCOME' ? 'income' : 'expenses';
                             });
+
+
+                            const sumRow = table.insertRow();
+                            sumRow.insertCell().textContent = 'Total';
+                            sumRow.insertCell().textContent = '';
+                            sumRow.insertCell().textContent = '€' + sum.toFixed(2);
+                            sumRow.insertCell().textContent = '';
+                            sumRow.insertCell().textContent = '';
                         });
                 };
             </script>
