@@ -3,6 +3,9 @@ package lt.mark3r.famfinances.controllers;
 import lt.mark3r.famfinances.models.dto.TransactionDTO;
 import lt.mark3r.famfinances.models.dto.mapper.TransactionMapper;
 import lt.mark3r.famfinances.models.entities.FinTransactions;
+import lt.mark3r.famfinances.service.BalanceService;
+import lt.mark3r.famfinances.service.ExpensesService;
+import lt.mark3r.famfinances.service.IncomeService;
 import lt.mark3r.famfinances.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,10 +20,17 @@ import java.util.stream.Collectors;
 public class TransactionApiController {
 
 	private final TransactionService transactionService;
+	private final BalanceService balanceService;
+	private final IncomeService incomeService;
+	private final ExpensesService expensesService;
+
 
 	@Autowired
-	public TransactionApiController(TransactionService transactionService) {
+	public TransactionApiController(TransactionService transactionService, BalanceService balanceService, IncomeService incomeService, ExpensesService expensesService) {
 		this.transactionService = transactionService;
+		this.balanceService = balanceService;
+		this.incomeService = incomeService;
+		this.expensesService = expensesService;
 	}
 
 	@GetMapping
@@ -70,41 +80,41 @@ public class TransactionApiController {
 
 	@GetMapping("/income")
 	public ResponseEntity<List<TransactionDTO>> getAllIncome() {
-		List<FinTransactions> transactions = transactionService.getAllIncome();
+		List<FinTransactions> transactions = incomeService.getAllIncome();
 		List<TransactionDTO> dtos = transactions.stream().map(TransactionMapper::convertToDTO).collect(Collectors.toList());
 		return ResponseEntity.ok(dtos);
 	}
 
 	@GetMapping("/expenses")
 	public ResponseEntity<List<TransactionDTO>> getAllExpenses() {
-		List<FinTransactions> transactions = transactionService.getAllExpenses();
+		List<FinTransactions> transactions = expensesService.getAllExpenses();
 		List<TransactionDTO> dtos = transactions.stream().map(TransactionMapper::convertToDTO).collect(Collectors.toList());
 		return ResponseEntity.ok(dtos);
 	}
 
 	@GetMapping("/expenses/{month}/{year}")
 	public ResponseEntity<List<TransactionDTO>> getExpensesByMonth(@PathVariable int month, @PathVariable int year) {
-		List<FinTransactions> transactions = transactionService.getExpensesByMonth(month, year);
+		List<FinTransactions> transactions = expensesService.getExpensesByMonth(month, year);
 		List<TransactionDTO> dtos = transactions.stream().map(TransactionMapper::convertToDTO).collect(Collectors.toList());
 		return ResponseEntity.ok(dtos);
 	}
 
 	@GetMapping("/income/{month}/{year}")
 	public ResponseEntity<List<TransactionDTO>> getIncomeByMonth(@PathVariable int month, @PathVariable int year) {
-		List<FinTransactions> transactions = transactionService.getIncomeByMonth(month, year);
+		List<FinTransactions> transactions = incomeService.getIncomeByMonth(month, year);
 		List<TransactionDTO> dtos = transactions.stream().map(TransactionMapper::convertToDTO).collect(Collectors.toList());
 		return ResponseEntity.ok(dtos);
 	}
 
 	@GetMapping("/balance/all-time")
 	public ResponseEntity<Double> getAllTimeBalance() {
-		Double balance = transactionService.getAllTimeBalance();
+		Double balance = balanceService.getAllTimeBalance();
 		return ResponseEntity.ok(balance);
 	}
 
 	@GetMapping("/balance/{month}/{year}")
 	public ResponseEntity<Double> getBalanceByMonth(@PathVariable int month, @PathVariable int year) {
-		Double balance = transactionService.getBalanceByMonth(month, year);
+		Double balance = balanceService.getBalanceByMonth(month, year);
 		return ResponseEntity.ok(balance);
 	}
 

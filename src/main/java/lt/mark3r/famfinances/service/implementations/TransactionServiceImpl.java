@@ -9,9 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -62,54 +60,7 @@ public class TransactionServiceImpl implements TransactionService {
 		}
 	}
 
-	@Override
-	public List<FinTransactions> getAllIncome() {
-		return trRepository.findByCategory(Category.INCOME);
-	}
-
-	@Override
-	public List<FinTransactions> getAllExpenses() {
-		return trRepository.findByCategory(Category.EXPENSES);
-	}
-
-	@Override
-	public List<FinTransactions> getExpensesByMonth(int month, int year) {
-		return trRepository.findTransactionsByMonthAndCategory(month, year, Category.EXPENSES);
-	}
-
-
-	@Override
-	public List<FinTransactions> getIncomeByMonth(int month, int year) {
-		List<FinTransactions> transactions = trRepository.findTransactionsByMonthAndCategory(month, year, Category.INCOME);
-		return Objects.requireNonNullElse(transactions, Collections.emptyList());
-	}
-
-	@Override
-	public Double getAllTimeBalance() {
-		Double income = trRepository.sumAmountByCategory(Category.INCOME);
-		Double expenses = trRepository.sumAmountByCategory(Category.EXPENSES);
-		return (income != null ? income : 0) - (expenses != null ? expenses : 0);
-	}
-
-	@Override
-	public Double getBalanceByMonth(int month, int year) {
-		Double income = trRepository.sumAmountByCategoryAndMonth(Category.INCOME, month, year);
-		Double expenses = trRepository.sumAmountByCategoryAndMonth(Category.EXPENSES, month, year);
-		return (income != null ? income : 0) - (expenses != null ? expenses : 0);
-	}
-
-	@Override
-	public List<TransactionDTO> getAllExpensesDTO() {
-		return getTransactionsDTOByCategory(Category.EXPENSES);
-	}
-
-	@Override
-	public List<TransactionDTO> getAllIncomeDTO() {
-		return getTransactionsDTOByCategory(Category.INCOME);
-	}
-
-
-	private List<TransactionDTO> getTransactionsDTOByCategory(Category category) {
+	List<TransactionDTO> getTransactionsDTOByCategory(Category category) {
 		List<FinTransactions> transactions = trRepository.findByCategory(category);
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 		return transactions.stream()

@@ -3,6 +3,9 @@ package lt.mark3r.famfinances.controllers;
 import lt.mark3r.famfinances.models.dto.TransactionDTO;
 import lt.mark3r.famfinances.models.dto.mapper.TransactionMapper;
 import lt.mark3r.famfinances.models.entities.FinTransactions;
+import lt.mark3r.famfinances.service.BalanceService;
+import lt.mark3r.famfinances.service.ExpensesService;
+import lt.mark3r.famfinances.service.IncomeService;
 import lt.mark3r.famfinances.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,10 +19,16 @@ import java.util.stream.Collectors;
 public class TransactionsController {
 
 	private final TransactionService transactionService;
+	private final BalanceService balanceService;
+	private final IncomeService incomeService;
+	private final ExpensesService expensesService;
 
 	@Autowired
-	public TransactionsController(TransactionService transactionService) {
+	public TransactionsController(TransactionService transactionService, BalanceService balanceService, IncomeService incomeService, ExpensesService expensesService) {
 		this.transactionService = transactionService;
+		this.balanceService = balanceService;
+		this.incomeService = incomeService;
+		this.expensesService = expensesService;
 	}
 
 	@GetMapping("/dataEntryForm")
@@ -47,7 +56,7 @@ public class TransactionsController {
 	}
 
 	@PostMapping("/transactions")
-	public String createTransaction(@ModelAttribute("transaction") TransactionDTO dto, Model model) {
+	public String createTransaction(@ModelAttribute("transaction") TransactionDTO dto) {
 		FinTransactions transaction = TransactionMapper.convertToEntity(dto);
 		transactionService.saveTransaction(transaction);
 		return "redirect:/transactions";
@@ -57,7 +66,7 @@ public class TransactionsController {
 	@PutMapping("/transactions/{id}")
 	public String updateTransaction(@PathVariable Long id, @ModelAttribute TransactionDTO dto) {
 		FinTransactions transaction = TransactionMapper.convertToEntity(dto);
-		transaction = transactionService.updateTransaction(id, transaction);
+		transactionService.updateTransaction(id, transaction);
 		return "redirect:/transactions";
 	}
 
@@ -80,7 +89,7 @@ public class TransactionsController {
 
 	@GetMapping("/expenses")
 	public String getAllExpenses(Model model) {
-		List<TransactionDTO> dtos = transactionService.getAllExpensesDTO(); // Updated service call
+		List<TransactionDTO> dtos = expensesService.getAllExpensesDTO(); // Updated service call
 		model.addAttribute("transactions", dtos);
 		return "expensesList";
 	}
@@ -88,7 +97,7 @@ public class TransactionsController {
 
 	@GetMapping("/expenses/{month}/{year}")
 	public String getExpensesByMonth(@PathVariable int month, @PathVariable int year, Model model) {
-		List<FinTransactions> transactions = transactionService.getExpensesByMonth(month, year);
+		List<FinTransactions> transactions = expensesService.getExpensesByMonth(month, year);
 		List<TransactionDTO> dtos = transactions.stream()
 				.map(TransactionMapper::convertToDTO)
 				.collect(Collectors.toList());
@@ -98,14 +107,14 @@ public class TransactionsController {
 
 	@GetMapping("/income")
 	public String getAllIncome(Model model) {
-		List<TransactionDTO> dtos = transactionService.getAllIncomeDTO(); // This method will need to be implemented in your service layer
+		List<TransactionDTO> dtos = incomeService.getAllIncomeDTO(); // This method will need to be implemented in your service layer
 		model.addAttribute("transactions", dtos);
 		return "incomeList";
 	}
 
 	@GetMapping("/income/{month}/{year}")
 	public String getIncomeByMonth(@PathVariable int month, @PathVariable int year, Model model) {
-		List<FinTransactions> transactions = transactionService.getIncomeByMonth(month, year);
+		List<FinTransactions> transactions = incomeService.getIncomeByMonth(month, year);
 		List<TransactionDTO> dtos = transactions.stream()
 				.map(TransactionMapper::convertToDTO)
 				.collect(Collectors.toList());
@@ -115,14 +124,14 @@ public class TransactionsController {
 
 	@GetMapping("/balance/all-time")
 	public String getAllTimeBalance(Model model) {
-		Double balance = transactionService.getAllTimeBalance();
+		Double balance = balanceService.getAllTimeBalance();
 		model.addAttribute("balance", balance);
 		return "allTimeBalance";
 	}
 
 	@GetMapping("/balance/{month}/{year}")
 	public String getBalanceByMonth(@PathVariable int month, @PathVariable int year, Model model) {
-		Double balance = transactionService.getBalanceByMonth(month, year);
+		Double balance = balanceService.getBalanceByMonth(month, year);
 		model.addAttribute("balance", balance);
 		return "monthlyBalance";
 	}
