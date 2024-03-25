@@ -6,23 +6,30 @@
     <link rel="stylesheet" type="text/css" href="/Style.css">
 </head>
 <body>
-<h1>All Time Balance</h1>
+<div class="main-section">
+    <button onclick="location.href='/';">Return to Index</button>
+    <div class="body-content">
+        <div class="form-container">
+            <h1>All Time Balance</h1>
 
-<p id="balance"></p>
-<a href="/index">Back to Index</a>
+            <p id="balance"></p>
 
-<script>
-    window.onload = function () {
-        fetch('/api/transactions/balance/all-time')
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('balance').textContent = 'Balance: €' + data.toFixed(2);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-    };
-</script>
+            <script>
+                window.onload = function () {
+                    fetch('/api/transactions/balance/all-time')
+                        .then(response => response.json())
+                        .then(data => {
+                            document.getElementById('balance').textContent = 'Balance: €' + data.toFixed(2);
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+                };
+            </script>
+
+        </div>
+    </div>
+</div>
 
 </body>
 </html>

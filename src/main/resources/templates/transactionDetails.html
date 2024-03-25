@@ -5,82 +5,89 @@
     <link rel="stylesheet" type="text/css" href="/Style.css">
 </head>
 <body>
-<h1>Transaction Details</h1>
+<div class="main-section">
+    <button onclick="location.href='/';">Return to Index</button>
+    <div class="body-content">
+        <div class="form-container">
+            <h1>Transaction Details</h1>
 
-<script>
-    window.onload = function () {
-        const transactionId = window.location.pathname.split('/').pop();
+            <script>
+                window.onload = function () {
+                    const transactionId = window.location.pathname.split('/').pop();
 
-        fetch('/api/transactions/' + transactionId)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log(data);
-                document.getElementById('id').textContent = data.id;
-                document.getElementById('timestamp').textContent = data.timestamp;
-                document.getElementById('category').textContent = data.category;
-                document.getElementById('name').textContent = data.name;
-                document.getElementById('amount').textContent = '€' + data.amount.toFixed(2);
-                document.getElementById('description').textContent = data.description;
-                document.getElementById('dateTime').textContent = data.dateTime;
-            })
-            .catch(error => {
-                console.error('There has been a problem with your fetch operation:', error);
-            });
-    };
-</script>
+                    fetch('/api/transactions/' + transactionId)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            console.log(data);
+                            document.getElementById('id').textContent = data.id;
+                            document.getElementById('timestamp').textContent = data.timestamp;
+                            document.getElementById('category').textContent = data.category;
+                            document.getElementById('name').textContent = data.name;
+                            document.getElementById('amount').textContent = '€' + data.amount.toFixed(2);
+                            document.getElementById('description').textContent = data.description;
+                            document.getElementById('dateTime').textContent = data.dateTime;
+                        })
+                        .catch(error => {
+                            console.error('There has been a problem with your fetch operation:', error);
+                        });
+                };
+            </script>
 
 
-<table>
-    <tr>
-        <th>ID</th>
-        <td id="id"></td>
-    </tr>
-    <tr>
-        <th>Timestamp</th>
-        <td id="timestamp"></td>
-    </tr>
-    <tr>
-        <th>Category</th>
-        <td id="category"></td>
-    </tr>
-    <tr>
-        <th>Name</th>
-        <td id="name"></td>
-    </tr>
-    <tr>
-        <th>Amount</th>
-        <td id="amount"></td>
-    </tr>
-    <tr>
-        <th>Description</th>
-        <td id="description"></td>
-    </tr>
-    <tr>
-        <th>Date-Time</th>
-        <td id="dateTime"></td>
-    </tr>
-</table>
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <td id="id"></td>
+                </tr>
+                <tr>
+                    <th>Timestamp</th>
+                    <td id="timestamp"></td>
+                </tr>
+                <tr>
+                    <th>Category</th>
+                    <td id="category"></td>
+                </tr>
+                <tr>
+                    <th>Name</th>
+                    <td id="name"></td>
+                </tr>
+                <tr>
+                    <th>Amount</th>
+                    <td id="amount"></td>
+                </tr>
+                <tr>
+                    <th>Description</th>
+                    <td id="description"></td>
+                </tr>
+                <tr>
+                    <th>Date-Time</th>
+                    <td id="dateTime"></td>
+                </tr>
+            </table>
 
-<button onclick="location.href='/transactions'">Back to Transactions List</button>
-<button id="deleteButton">Delete Transaction</button>
+            <button onclick="location.href='/transactions'">Back to Transactions List</button>
+            <button id="deleteButton">Delete Transaction</button>
 
-<script>
-    document.getElementById('deleteButton').addEventListener('click', function () {
-        fetch('/api/transactions/' + transactionId, {
-            method: 'DELETE'
-        }).then(response => {
-            if (response.ok) {
-                window.location.href = '/transactions';
-            } else {
-                alert('Error occurred while trying to delete transaction.');
-            }
-        });
-    });
-</script>
+            <script>
+                document.getElementById('deleteButton').addEventListener('click', function () {
+                    fetch('/api/transactions/' + transactionId, {
+                        method: 'DELETE'
+                    }).then(response => {
+                        if (response.ok) {
+                            window.location.href = '/transactions';
+                        } else {
+                            alert('Error occurred while trying to delete transaction.');
+                        }
+                    });
+                });
+            </script>
+        </div>
+    </div>
+</div>
 </body>
 </html>

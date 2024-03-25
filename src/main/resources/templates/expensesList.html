@@ -15,53 +15,59 @@
     </style>
 </head>
 <body>
-<h1>Expenses List</h1>
+<div class="main-section">
+    <button onclick="location.href='index';">Return to Index</button>
+    <div class="body-content">
+        <div class="form-container">
+            <h1>Expenses List</h1>
 
-<script>
-    window.onload = function () {
-        fetch('/api/transactions/expenses')
-            .then(response => response.json())
-            .then(data => {
-                const table = document.getElementById('transactionTable');
-                data.forEach(transaction => {
-                    const row = table.insertRow();
-                    row.insertCell().textContent = transaction.id;
-                    row.insertCell().textContent = transaction.description;
-                    row.insertCell().textContent = '€' + transaction.amount.toFixed(2);
-                    row.insertCell().textContent = transaction.dateTime;
+            <script>
+                window.onload = function () {
+                    fetch('/api/transactions/expenses')
+                        .then(response => response.json())
+                        .then(data => {
+                            const table = document.getElementById('transactionTable');
+                            data.forEach(transaction => {
+                                const row = table.insertRow();
+                                row.insertCell().textContent = transaction.id;
+                                row.insertCell().textContent = transaction.description;
+                                row.insertCell().textContent = '€' + transaction.amount.toFixed(2);
+                                row.insertCell().textContent = transaction.dateTime;
 
-                    const detailsCell = row.insertCell();
-                    const detailsButton = document.createElement('button');
-                    detailsButton.textContent = 'Details';
-                    detailsButton.onclick = function () {
-                        location.href = '/transactions/' + transaction.id;
-                    };
-                    detailsCell.appendChild(detailsButton);
+                                const detailsCell = row.insertCell();
+                                const detailsButton = document.createElement('button');
+                                detailsButton.textContent = 'Details';
+                                detailsButton.onclick = function () {
+                                    location.href = '/transactions/' + transaction.id;
+                                };
+                                detailsCell.appendChild(detailsButton);
 
-                    const editButton = document.createElement('button');
-                    editButton.textContent = 'Edit Entry';
-                    editButton.onclick = function () {
-                        location.href = '/transactions/edit/' + transaction.id;
-                    };
-                    detailsCell.appendChild(editButton);
+                                const editButton = document.createElement('button');
+                                editButton.textContent = 'Edit Entry';
+                                editButton.onclick = function () {
+                                    location.href = '/transactions/edit/' + transaction.id;
+                                };
+                                detailsCell.appendChild(editButton);
 
-                    row.className = transaction.category === 'INCOME' ? 'income' : 'expenses';
-                });
-            });
-    };
-</script>
+                                row.className = transaction.category === 'INCOME' ? 'income' : 'expenses';
+                            });
+                        });
+                };
+            </script>
 
-<table id="transactionTable">
-    <tr>
-        <th>Transaction ID</th>
-        <th>Description</th>
-        <th>Amount</th>
-        <th>Date</th>
-        <th>Actions</th>
-    </tr>
+            <table id="transactionTable">
+                <tr>
+                    <th>Transaction ID</th>
+                    <th>Description</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
 
-</table>
+            </table>
 
-<button onclick="location.href='index';">Return to Index</button>
+        </div>
+    </div>
+</div>
 </body>
 </html>

@@ -38,10 +38,28 @@
     document.addEventListener('DOMContentLoaded', function () {
         const editForm = document.getElementById('editTransactionForm');
         const deleteButton = document.getElementById('deleteButton');
-
-
         const transactionId = window.location.pathname.split("/").pop();
 
+        // Fetch current transaction data and populate the form
+        fetch('/api/transactions/' + transactionId)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+
+                document.getElementById('name').value = data.name;
+                document.getElementById('amount').value = data.amount;
+                document.getElementById('category').value = data.category;
+                document.getElementById('description').value = data.description || '';
+                document.getElementById('dateTime').value = data.dateTime;
+            })
+            .catch(error => {
+                console.error('Error loading transaction:', error);
+                alert('An error occurred while loading the transaction details.');
+            });
 
         editForm.addEventListener('submit', function (event) {
             event.preventDefault();
